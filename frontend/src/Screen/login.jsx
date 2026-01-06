@@ -1,0 +1,106 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
+
+const Login = () => {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // 🔹 handle login
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // ✅ Save JWT token in localStorage
+        localStorage.setItem("token", data.token);
+        alert(`Welcome ${data.user.name} ✅`);
+
+        // Redirect to dashboard or home page
+        navigate("/dashboard");
+      } else {
+        alert(data.message); // show backend error
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h2>Welcome Back 👋</h2>
+        <p className="subtitle">Login to your account</p>
+
+        <form onSubmit={handleSubmit}>
+          <div className="field">
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <label>Email Address</label>
+          </div>
+
+          <div className="field">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              required
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <label>Password</label>
+            <span
+              className="toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </span>
+          </div>
+
+          <button className="login-btn" type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+          <div className="extra">
+            <span>Forgot Password?</span>
+            <span
+              className="signup"
+              onClick={() => navigate("/signup")}
+            >
+              Create Account
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
