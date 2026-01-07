@@ -17,32 +17,26 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🔹 handle login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      // ✅ Live backend URL
+      const res = await fetch("https://login-signup-mern-bn54.onrender.com/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       const data = await res.json();
 
       if (res.ok) {
-        // ✅ Save JWT token in localStorage
         localStorage.setItem("token", data.token);
         alert(`Welcome ${data.user.name} ✅`);
-
-        // Redirect to dashboard or home page
         navigate("/dashboard");
       } else {
-        alert(data.message);
+        alert(data.message || "Login failed ❌");
       }
     } catch (error) {
       console.error(error);
@@ -93,7 +87,10 @@ const Login = () => {
 
           <div className="extra">
             <span>Forgot Password?</span>
-            <span className="signup" onClick={() => navigate("/signup")}>
+            <span
+              className="signup"
+              onClick={() => navigate("/signup")}
+            >
               Create Account
             </span>
           </div>
