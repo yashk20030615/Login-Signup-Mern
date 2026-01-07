@@ -9,12 +9,12 @@ const Dashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/");
+      navigate("/login");
       return;
     }
 
-    fetch("http://localhost:5000/api/auth/dashboard", {
-      headers: { Authorization: token },
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/dashboard`, {
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -23,20 +23,19 @@ const Dashboard = () => {
       .then(() => setLoading(false))
       .catch(() => {
         localStorage.removeItem("token");
-        navigate("/");
+        navigate("/login");
       });
   }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    navigate("/login");
   };
 
   if (loading) return <div className="loader">Loading...</div>;
 
   return (
     <div className="dashboard-container">
-      {/* TOP BAR */}
       <div className="dashboard-header">
         <h2>Dashboard</h2>
         <button className="logout-btn" onClick={handleLogout}>
@@ -44,14 +43,11 @@ const Dashboard = () => {
         </button>
       </div>
 
-      {/* CENTER CONTENT */}
       <div className="dashboard-content">
         <h1>Welcome 👋</h1>
         <p>
           Welcome to <b>Login-SignUp Project</b> built using <br />
-          <span>
-            React.JS, Node.JS, Express.JS and MongoDB
-          </span>
+          <span>React.JS, Node.JS, Express.JS and MongoDB</span>
         </p>
       </div>
     </div>

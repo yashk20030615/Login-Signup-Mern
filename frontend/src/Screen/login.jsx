@@ -22,12 +22,14 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // ✅ Live backend URL
-      const res = await fetch("https://login-signup-mern-bn54.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json();
 
@@ -87,10 +89,7 @@ const Login = () => {
 
           <div className="extra">
             <span>Forgot Password?</span>
-            <span
-              className="signup"
-              onClick={() => navigate("/signup")}
-            >
+            <span className="signup" onClick={() => navigate("/signup")}>
               Create Account
             </span>
           </div>
