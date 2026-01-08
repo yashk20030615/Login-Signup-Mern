@@ -4,6 +4,7 @@ import "./temp.css";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,7 +20,6 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🔹 handle signup API call
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,7 +31,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
+      const res = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -45,7 +45,6 @@ const Signup = () => {
 
       if (res.status === 201) {
         alert("Signup successful ✅");
-        // Redirect to login
         navigate("/");
       } else {
         alert(data.message || "Signup failed ❌");
@@ -66,63 +65,31 @@ const Signup = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="field">
-            <input
-              type="text"
-              name="name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-            />
+            <input type="text" name="name" required value={formData.name} onChange={handleChange} />
             <label>Full Name</label>
           </div>
 
           <div className="field">
-            <input
-              type="email"
-              name="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-            />
+            <input type="email" name="email" required value={formData.email} onChange={handleChange} />
             <label>Email Address</label>
           </div>
 
           <div className="field">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-            />
+            <input type={showPassword ? "text" : "password"} name="password" required value={formData.password} onChange={handleChange} />
             <label>Password</label>
-            <span
-              className="toggle"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+            <span className="toggle" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? "Hide" : "Show"}
             </span>
           </div>
 
           <div className="field">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="confirmPassword"
-              required
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
+            <input type={showPassword ? "text" : "password"} name="confirmPassword" required value={formData.confirmPassword} onChange={handleChange} />
             <label>Confirm Password</label>
           </div>
 
           <button className="signup-btn" type="submit" disabled={loading}>
             {loading ? "Signing up..." : "Sign Up"}
           </button>
-
-          <p className="login-link">
-            Already have an account?
-            <span onClick={() => navigate("/")}> Login</span>
-          </p>
         </form>
       </div>
     </div>

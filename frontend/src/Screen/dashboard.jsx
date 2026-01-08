@@ -5,16 +5,20 @@ import "./temp3.css";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!token) {
-      navigate("/login");
+      navigate("/");
       return;
     }
 
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/dashboard`, {
-      headers: { Authorization: `Bearer ${token}` },
+    fetch(`${API_URL}/api/auth/dashboard`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -23,13 +27,13 @@ const Dashboard = () => {
       .then(() => setLoading(false))
       .catch(() => {
         localStorage.removeItem("token");
-        navigate("/login");
+        navigate("/");
       });
-  }, [navigate]);
+  }, [navigate, API_URL]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/");
   };
 
   if (loading) return <div className="loader">Loading...</div>;
@@ -47,7 +51,7 @@ const Dashboard = () => {
         <h1>Welcome 👋</h1>
         <p>
           Welcome to <b>Login-SignUp Project</b> built using <br />
-          <span>React.JS, Node.JS, Express.JS and MongoDB</span>
+          <span>React, Node, Express and MongoDB</span>
         </p>
       </div>
     </div>

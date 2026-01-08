@@ -4,6 +4,7 @@ import "./temp2.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [formData, setFormData] = useState({
     email: "",
@@ -22,14 +23,11 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       const data = await res.json();
 
